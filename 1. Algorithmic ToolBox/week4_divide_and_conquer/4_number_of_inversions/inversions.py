@@ -1,43 +1,41 @@
 # Uses python3
-import sys
-
+def merge(a, b, left, ave, right):
+    i, j, k = left, ave, left
+    count = 0
+    while (i <= ave -1 and j <= right):
+        if (a[i] <= a[j]):
+            b[k] = a[i]
+            i += 1
+            k += 1
+        else:
+            b[k] = a[j]
+            count += ave - i
+            j += 1
+            k += 1
+    while (i <= ave - 1):
+        b[k] = a[i]
+        i += 1
+        k += 1
+    while (j <= right):
+        b[k] = a[j]
+        j += 1
+        k += 1
+    for i in range(left,right+1):
+        a[i] = b[i]
+    return count
+			
 def get_number_of_inversions(a, b, left, right):
     number_of_inversions = 0
-    if right - left <= 1:
-        return [a[left]],number_of_inversions
+    if right <= left:
+        return number_of_inversions
     ave = (left + right) // 2
-    number_of_inversions += get_number_of_inversions(a, b, left, ave)[1]
-    number_of_inversions += get_number_of_inversions(a, b, ave, right)[1]
-    #write your code here
-    A=get_number_of_inversions(a, b, left, ave)[0]
-    B=get_number_of_inversions(a, b, ave, right)[0]
-    list_return=[]
-    alen=(ave-left)
-    blen=(right-ave)
-    andex=0
-    bndex=0
-    while(andex<alen and bndex<blen):
-        if A[andex]<=B[bndex]:
-            list_return.append(A[andex])
-            andex+=1
-            number_of_inversions+=bndex
-        else:
-            list_return.append(B[bndex])
-            bndex+=1
-            #number_of_inversions+=bndex
-    if bndex==blen:
-        number_of_inversions+=(alen-andex)*bndex
-    while(andex<alen):
-        list_return.append(A[andex])
-        andex+=1
-    while(bndex<blen):
-        list_return.append(B[bndex])
-        bndex+=1
-    #list_return=list_return+A+B
-    return list_return,number_of_inversions
+    number_of_inversions += get_number_of_inversions(a, b, left, ave)
+    number_of_inversions += get_number_of_inversions(a, b, ave+1, right)
+    number_of_inversions += merge(a, b, left, ave+1, right)
+    return number_of_inversions
 
 if __name__ == '__main__':
-    input = sys.stdin.read()
-    n, *a = list(map(int, input.split()))
+    n = int(input())
+    a = list(map(int, input().split()))
     b = n * [0]
-    print(get_number_of_inversions(a, b, 0, len(a))[1])
+    print(get_number_of_inversions(a, b, 0, len(a)-1))
