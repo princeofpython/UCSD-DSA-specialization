@@ -20,18 +20,44 @@ def build_heap(data):
                 data[i], data[j] = data[j], data[i]
     return swaps
 
+def leftChild(i):
+    return 2*i+1
+
+def rightChild(i):
+    return 2*i+2
+
+def parent(i):
+    return (i-1)//2
+
+def SiftDown(i,size,data):
+    maxIndex=i
+    l=leftChild(i)
+    if l<size and data[l]<data[maxIndex]:
+        maxIndex=l
+    r=rightChild(i)
+    if r<size and data[r]<data[maxIndex]:
+        maxIndex=r
+    if i!=maxIndex:
+        data[i],data[maxIndex]=data[maxIndex],data[i]
+        swaps.append((i,maxIndex))
+        SiftDown(maxIndex,size,data)
+
+def build_heap_fast(data,n):
+    for i in range(n//2,-1,-1):
+        SiftDown(i,n,data)
 
 def main():
     n = int(input())
     data = list(map(int, input().split()))
     assert len(data) == n
-
-    swaps = build_heap(data)
-
+    global swaps
+    swaps=[]
+    build_heap_fast(data,n)
     print(len(swaps))
     for i, j in swaps:
         print(i, j)
-
-
+'''
+    swaps = build_heap_fast(data)
+'''
 if __name__ == "__main__":
     main()
