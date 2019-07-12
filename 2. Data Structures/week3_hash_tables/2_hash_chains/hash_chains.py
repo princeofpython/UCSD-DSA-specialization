@@ -18,6 +18,7 @@ class QueryProcessor:
         self.bucket_count = bucket_count
         # store all strings in one list
         self.elems = []
+        self.hashTable =[[] for _ in range(self.bucket_count)]
 
     def _hash_func(self, s):
         ans = 0
@@ -30,7 +31,6 @@ class QueryProcessor:
 
     def write_chain(self, chain):
         print(' '.join(chain))
-
     def read_query(self):
         return Query(input().split())
 
@@ -52,13 +52,32 @@ class QueryProcessor:
             else:
                 if ind != -1:
                     self.elems.pop(ind)
-
+    def process_query_fast(self, query):
+        if query.type == "check":
+            # use reverse order, because we append strings to the end
+            self.write_chain(cur for cur in reversed(self.hashTable[query.ind]))
+                        #if self._hash_func(cur) == query.ind)
+        else:
+            try:
+                ind = self.hashTable[self._hash_func(query.s)].index(query.s)
+            except ValueError:
+                ind = -1
+            if query.type == 'find':
+                self.write_search_result(ind != -1)
+            elif query.type == 'add':
+                if ind == -1:
+                    self.hashTable[self._hash_func(query.s)].append(query.s)
+            else:
+                if ind != -1:
+                    self.hashTable[self._hash_func(query.s)].pop(ind)
+                    
     def process_queries(self):
         n = int(input())
-        for i in range(n):
-            self.process_query(self.read_query())
+        for _ in range(n):
+            self.process_query_fast(self.read_query())
 
 if __name__ == '__main__':
     bucket_count = int(input())
     proc = QueryProcessor(bucket_count)
     proc.process_queries()
+

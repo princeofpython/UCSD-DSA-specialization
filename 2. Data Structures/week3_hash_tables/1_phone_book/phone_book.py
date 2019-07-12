@@ -1,5 +1,5 @@
 # python3
-
+import numpy
 class Query:
     def __init__(self, query):
         self.type = query[0]
@@ -42,6 +42,21 @@ def process_queries(queries):
             result.append(response)
     return result
 
-if __name__ == '__main__':
-    write_responses(process_queries(read_queries()))
+def process_queries_fast(queries):
+    info= [None for i in range(0, 10000000)]
+    result = []
+    for cur_query in queries:
+        if cur_query.type == 'add':
+            info[cur_query.number]=cur_query.name
+        elif cur_query.type == 'del':
+            info[cur_query.number]=None
+        else:
+            response = 'not found'
+            if info[cur_query.number]!=None:
+                response=info[cur_query.number]
+            result.append(response)
+    return result    
 
+if __name__ == '__main__':
+    #write_responses(process_queries(read_queries()))
+    write_responses(process_queries_fast(read_queries()))
