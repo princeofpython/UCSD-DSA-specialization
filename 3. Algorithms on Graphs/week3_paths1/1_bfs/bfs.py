@@ -5,8 +5,18 @@ import queue
 
 def distance(adj, s, t):
     #write your code here
-    return -1
-
+    n=len(adj)
+    dist=[-1 for _ in range(n)]
+    dist[s]=0
+    q=queue.Queue()
+    q.put(s)
+    while not q.empty():
+        u = q.get()
+        for v in adj[u]:
+            if dist[v]==-1:
+                q.put(v)
+                dist[v]=dist[u]+1
+    return dist[t]
 if __name__ == '__main__':
     input = sys.stdin.read()
     data = list(map(int, input.split()))
