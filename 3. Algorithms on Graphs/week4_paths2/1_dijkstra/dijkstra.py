@@ -2,10 +2,29 @@
 
 import sys
 import queue
+import queue
 
 
 def distance(adj, cost, s, t):
-    #write your code here
+    n = len(adj)
+    dist = [float('inf')] * n
+    prev = [None] * n
+    dist[s] = 0
+    H = queue.PriorityQueue()
+    H.put((0, s))
+    processed = [False] * n
+    while not H.empty():
+        _, u = H.get()
+        if u == t:
+            return dist[u]
+        if not processed[u]:
+            processed[u]=True
+            for i, v in enumerate(adj[u]):
+                d = dist[u] + cost[u][i]
+                if dist[v] > d:
+                    dist[v] = d
+                    prev[v] = u
+                    H.put((d, v))
     return -1
 
 
