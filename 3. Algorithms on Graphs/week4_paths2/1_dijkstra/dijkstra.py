@@ -1,39 +1,43 @@
 #Uses python3
 
 import sys
-import queue
-import queue
+def extract_min(visited, dist):
+    min_vertex = len(dist)
+    min_distance = float('inf')
+
+    for v in range(len(dist)):
+        if not visited[v] and dist[v] < min_distance:
+            min_vertex = v
+            min_distance = dist[v]
+
+    return min_vertex
 
 
 def distance(adj, cost, s, t):
-    n = len(adj)
-    dist = [float('inf')] * n
-    prev = [None] * n
+    vertices = len(adj)
+    dist = [float('inf')] * vertices
+    visited = [False] * vertices
     dist[s] = 0
-    H = queue.PriorityQueue()
-    H.put((0, s))
-    processed = [False] * n
-    while not H.empty():
-        _, u = H.get()
-        if u == t:
-            return dist[u]
-        if not processed[u]:
-            processed[u]=True
-            for i, v in enumerate(adj[u]):
-                d = dist[u] + cost[u][i]
-                if dist[v] > d:
-                    dist[v] = d
-                    prev[v] = u
-                    H.put((d, v))
-    return -1
+
+    for _ in range(vertices - 1):
+        v = extract_min(visited, dist)
+        if v == vertices:
+            break
+        visited[v] = True
+        for i, u in enumerate(adj[v]):
+            if not visited[u] and dist[u] > dist[v] + cost[v][i]:
+                dist[u] = dist[v] + cost[v][i]
+
+    return dist[t] if dist[t] != float('inf') else -1
 
 
 if __name__ == '__main__':
-    input = sys.stdin.read()
-    data = list(map(int, input.split()))
+    user_input = sys.stdin.read()
+    data = list(map(int, user_input.split()))
     n, m = data[0:2]
     data = data[2:]
-    edges = list(zip(zip(data[0:(3 * m):3], data[1:(3 * m):3]), data[2:(3 * m):3]))
+    edges = list(
+        zip(zip(data[0:(3 * m):3], data[1:(3 * m):3]), data[2:(3 * m):3]))
     data = data[3 * m:]
     adj = [[] for _ in range(n)]
     cost = [[] for _ in range(n)]

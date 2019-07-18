@@ -5,6 +5,19 @@ import sys
 
 def negative_cycle(adj, cost):
     #write your code here
+    dist = [n+1] * n
+    prev = [None] * n
+    dist[0] = 0
+    for _ in range(n-1):
+        for u, edges in enumerate(adj):
+            for i, v in enumerate(edges):
+                if dist[v]>dist[u]+cost[u][i]:
+                    dist[v]=dist[u]+cost[u][i]
+                    prev[v]=u
+    for u, edges in enumerate(adj):
+        for i, v in enumerate(edges):
+            if dist[v]>dist[u]+cost[u][i]:
+                return 1
     return 0
 
 
