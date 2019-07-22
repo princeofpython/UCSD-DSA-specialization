@@ -1,6 +1,6 @@
 # python3
 import sys
-
+import numpy
 
 def build_suffix_array(text):
   """
@@ -11,8 +11,11 @@ def build_suffix_array(text):
   suffix of text starts.
   """
   result = []
+  #for i in range(len(text)):
+    #result.append(text[i:])
   # Implement this function yourself
-  return result
+  #return numpy.argsort(result)
+  return [each[1] for each in sorted([(text[i:], i) for i in range(len(text))])]
 
 
 if __name__ == '__main__':
